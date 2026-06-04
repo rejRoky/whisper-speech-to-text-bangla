@@ -1,0 +1,25 @@
+services:
+  whisper-stt:
+    build:
+      context: .
+      args:
+        WHISPER_MODEL: ${WHISPER_MODEL:-medium}
+    image: whisper-stt:latest
+    container_name: whisper-stt
+    ports:
+      - "8000:8000"
+    environment:
+      WHISPER_MODEL: ${WHISPER_MODEL:-medium}
+    volumes:
+      - whisper_cache:/root/.cache/whisper
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  whisper_cache:
